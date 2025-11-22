@@ -243,7 +243,7 @@ const SECTIONS = [
       },
       {
         id: "l7",
-        title: 'Nurture for "not ready"',
+        title: "Nurture for “not ready”",
         text: "Leads that are not ready to buy, for example early stage DSOs or practices still evaluating, move into defined nurture programs with sequenced content and periodic check ins.",
       },
       {
@@ -493,6 +493,7 @@ const LeadForm = ({ onSubmit, isSubmitting }) => {
     zip: "",
   })
 
+  // Validate that all fields are present AND zip code is exactly 5 digits
   const isFormValid =
     Object.values(formData).every((val) => val && val.toString().trim() !== "") && formData.zip.trim().length === 5
 
@@ -501,7 +502,7 @@ const LeadForm = ({ onSubmit, isSubmitting }) => {
       <div className="p-8 text-center" style={{ backgroundColor: BRAND.secondary }}>
         <div className="mb-6 flex flex-col items-center justify-center">
           <img
-            src={BRAND.logoPlaceholder || "/placeholder.svg"}
+            src={BRAND.logoPlaceholder}
             alt="3D Smile Solutions"
             className="h-24 w-auto object-contain mb-2"
             onError={(e) => {
@@ -742,9 +743,13 @@ const LeadForm = ({ onSubmit, isSubmitting }) => {
 }
 
 const AIReport = ({ analysis, scores }) => {
+  // Helper to calculate mock benchmark radar data
   const radarData = useMemo(() => {
+    // If analysis is mock, use mock benchmark. If real, use real calculation.
+    // Since this component receives the *parsed* JSON, we can just use it.
     if (analysis?.benchmark) return analysis.benchmark
 
+    // Fallback logic to map current scores to radar format
     const subjects = {
       foundations: "Foundations",
       datamodel: "Data",
@@ -858,10 +863,13 @@ export default function RevOpsChecklist() {
   const [isSubmittingLead, setIsSubmittingLead] = useState(false)
   const [leadData, setLeadData] = useState(null)
 
+  // AI States
   const [aiAnalysis, setAiAnalysis] = useState(null)
   const [isAiLoading, setIsAiLoading] = useState(false)
 
   const scrollRef = useRef(null)
+
+  // --- LOGIC ---
 
   const calculateSectionScore = (sectionId) => {
     const section = SECTIONS.find((s) => s.id === sectionId)
@@ -879,6 +887,7 @@ export default function RevOpsChecklist() {
     return { ...results, total }
   }, [responses])
 
+  // Check if EVERY question in EVERY section is answered
   const isComplete = useMemo(() => {
     const totalQuestions = SECTIONS.reduce((acc, s) => acc + s.questions.length, 0)
     const answered = Object.keys(responses).length
@@ -910,7 +919,7 @@ export default function RevOpsChecklist() {
 
     if (!GOOGLE_API_KEY) {
       await new Promise((resolve) => setTimeout(resolve, 2000))
-      setAiAnalysis(MOCK_AI_RESPONSE)
+      setAiAnalysis(MOCK_AI_RESPONSE) // Use JSON structure
       setIsAiLoading(false)
       return
     }
@@ -947,7 +956,7 @@ export default function RevOpsChecklist() {
       setAiAnalysis(json)
     } catch (e) {
       console.error("AI Error:", e)
-      setAiAnalysis(MOCK_AI_RESPONSE)
+      setAiAnalysis(MOCK_AI_RESPONSE) // Fallback
     } finally {
       setIsAiLoading(false)
     }
@@ -986,9 +995,12 @@ export default function RevOpsChecklist() {
     }
   }
 
+  // --- PDF PRINT HANDLER ---
   const handlePrint = () => {
     window.print()
   }
+
+  // --- RENDER VIEWS ---
 
   if (isSubmitted) {
     const assessment = getOverallAssessment(scores.total)
@@ -998,6 +1010,7 @@ export default function RevOpsChecklist() {
         className="min-h-screen font-sans p-4 md:p-8 print:bg-white print:p-0"
         style={{ backgroundColor: "#F8FAFA" }}
       >
+        {/* Print Styles Injection */}
         <style>{`
           @media print {
             body * { visibility: hidden; }
@@ -1025,6 +1038,7 @@ export default function RevOpsChecklist() {
             </p>
           </div>
 
+          {/* Hero Result */}
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden mb-8 print:shadow-none print:border-2">
             <div
               className="h-2"
@@ -1041,6 +1055,7 @@ export default function RevOpsChecklist() {
             </div>
           </div>
 
+          {/* AI Report Section */}
           {isAiLoading ? (
             <div className="bg-white rounded-xl border border-slate-200 p-12 mb-8 text-center">
               <Loader2 size={48} className="text-[#029482] animate-spin mx-auto mb-4" />
@@ -1050,6 +1065,7 @@ export default function RevOpsChecklist() {
             <AIReport analysis={aiAnalysis} scores={scores} />
           )}
 
+          {/* Grid of Sections */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 print:grid-cols-2 print:gap-6">
             {SECTIONS.map((section) => (
               <SectionScoreCard
@@ -1061,6 +1077,7 @@ export default function RevOpsChecklist() {
             ))}
           </div>
 
+          {/* Footer CTA (Hidden on Print) */}
           <div
             className="text-white rounded-2xl p-8 md:p-12 text-center shadow-2xl no-print"
             style={{ backgroundColor: BRAND.secondary }}
@@ -1120,7 +1137,7 @@ export default function RevOpsChecklist() {
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center">
               <img
-                src={BRAND.logoPlaceholder || "/placeholder.svg"}
+                src={BRAND.logoPlaceholder}
                 alt="3D Smile Solutions"
                 className="h-10 md:h-12 w-auto object-contain"
                 onError={(e) => {
@@ -1201,6 +1218,7 @@ export default function RevOpsChecklist() {
           {/* Main Question Area */}
           <div className="lg:w-3/4" ref={scrollRef}>
             {SECTIONS.map((section) => {
+              // Logic to check section completion
               const answeredCount = section.questions.filter((q) => responses[q.id] !== undefined).length
               const isSectionComplete = answeredCount === section.questions.length
 
@@ -1267,6 +1285,7 @@ export default function RevOpsChecklist() {
                     ))}
                   </div>
 
+                  {/* Footer Nav */}
                   <div className="mt-8 flex justify-end">
                     {section.id !== "governance" ? (
                       <button
