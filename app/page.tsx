@@ -36,7 +36,8 @@ const BRAND = {
   sage: "#B5CDB2", // Sage Green
   beige: "#DFD7D0", // Beige
   gray: "#DCDEDF", // Light Gray
-  logoPlaceholder: "Profile Picture - 2 (1).png",
+  logoPlaceholder: "Logo.png",
+  Darklogo: "LogoD.png",
 }
 
 // --- CONFIGURATION ---
@@ -501,23 +502,23 @@ const LeadForm = ({ onSubmit, isSubmitting }) => {
       <div className="p-8 text-center" style={{ backgroundColor: BRAND.secondary }}>
         <div className="mb-6 flex flex-col items-center justify-center">
           <img
-            src={BRAND.logoPlaceholder || "/placeholder.svg"}
+            src={BRAND.Darklogo || "/placeholder.svg"}
             alt="3D Smile Solutions"
-            className="h-24 w-auto object-contain mb-2"
+            className="h-18 w-auto object-contain mb-2"
             onError={(e) => {
               e.target.style.display = "none"
               e.target.nextSibling.style.display = "flex"
             }}
           />
           <div style={{ display: "none" }} className="flex-col items-center">
-            <div className="w-16 h-16 mb-2">
+            <div className="w-16 h-16 mb-2 bg">
               <BrandLogo />
             </div>
             <span className="text-white font-bold text-xl tracking-wide">3D Smile Solutions</span>
           </div>
         </div>
+        <p className="text-[#029482] font-bold text-sm tracking-wide uppercase mb-4">WORK SMARTER. GROW FASTER.</p>
         <h2 className="text-2xl font-bold text-white mb-1">Assessment Complete!</h2>
-        <p className="text-[#029482] font-bold text-sm tracking-wide uppercase mb-4">Grow Faster. Work Smarter.</p>
         <p className="text-slate-300 text-sm">Enter details to unlock your full RevOps Maturity Report.</p>
       </div>
 
@@ -1078,7 +1079,7 @@ export default function RevOpsChecklist() {
       {/* Header */}
       <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-start gap-3 flex-col">
             <div className="flex items-center justify-center">
               <img
                 src={BRAND.logoPlaceholder || "/placeholder.svg"}
@@ -1093,12 +1094,11 @@ export default function RevOpsChecklist() {
                 <BrandLogo />
               </div>
             </div>
-            <div className="hidden md:flex flex-col">
+            <div className="hidden md:flex flex-col ">
               <span className="font-bold text-lg leading-none" style={{ color: BRAND.secondary }}>
-                3D Smile Solutions
               </span>
               <span className="text-xs font-medium tracking-wide" style={{ color: BRAND.primary }}>
-                GROW FASTER. WORK SMARTER.
+                WORK SMARTER. GROW FASTER.
               </span>
             </div>
           </div>
@@ -1144,7 +1144,7 @@ export default function RevOpsChecklist() {
                         scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
                       }, 10)
                     }}
-                    className={`w-full text-left px-4 py-3 rounded-lg flex items-center justify-between transition-all ${isActive ? "bg-white shadow-md ring-1 ring-[#029482]" : "hover:bg-slate-100 text-slate-600"}`}
+                    className={`w-[calc(100%-10px)] ml-1 text-left px-4 py-3 rounded-lg flex items-center justify-between transition-all ${isActive ? "bg-white shadow-md ring-1 ring-[#029482]" : "hover:bg-slate-100 text-slate-600"}`}
                   >
                     <div className="flex items-center gap-3">
                       <div className={isActive ? "text-[#029482]" : "text-slate-400"}>{section.icon}</div>
