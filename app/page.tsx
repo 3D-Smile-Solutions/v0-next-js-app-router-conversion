@@ -924,7 +924,8 @@ export default function RevOpsChecklist() {
       {
         "summary": "2-3 sentences executive summary.",
         "risks": [{"title": "Risk 1", "desc": "Details"}, {"title": "Risk 2", "desc": "Details"}],
-        "wins": [{"title": "Win 1", "desc": "Details"}, {"title": "Win 2", "desc": "Details"}]
+        "wins": [{"title": "Win 1", "desc": "Details"}, {"title": "Win 2", "desc": "Details"}],
+        "benchmark": [{"subject": "Foundations", "A": 80, "fullMark": 100}, ...] // Example benchmark if available
       }
     `
 
@@ -956,31 +957,36 @@ export default function RevOpsChecklist() {
   const handleLeadSubmit = async (formData) => {
     setIsSubmittingLead(true)
     setLeadData(formData)
-    generateAIAnalysis(formData, scores)
 
     const payload = {
-      lead: formData,
+      leadData: formData,
       scores: scores,
       responses: responses,
-      timestamp: new Date().toISOString(),
-      type: "RevOps Assessment",
     }
 
     try {
-      if (WEBHOOK_URL) {
-        await fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        })
+      console.log("[v0] Submitting form data to API:", payload)
+      const response = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      console.log("[v0] API response status:", response.status)
+      const result = await response.json()
+      console.log("[v0] API response data:", result)
+
+      if (result.success) {
+        generateAIAnalysis(formData, scores)
+        setShowLeadForm(false)
+        setIsSubmitted(true)
+        window.scrollTo(0, 0)
       } else {
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        alert("Error submitting form. Please try again.")
       }
-      setShowLeadForm(false)
-      setIsSubmitted(true)
-      window.scrollTo(0, 0)
     } catch (e) {
-      alert("Error submitting.")
+      console.error("[v0] Submission error:", e)
+      alert("Error submitting form. Please try again.")
     } finally {
       setIsSubmittingLead(false)
     }
