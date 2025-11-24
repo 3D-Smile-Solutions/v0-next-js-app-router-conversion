@@ -110,7 +110,7 @@ export async function sendResultsEmail(params: {
 
   try {
     const response = await resend.emails.send({
-      from: "3D Smile Solutions <onboarding@resend.dev>",
+      from: "3D Smile Solutions <hello@3dsmilesolutions.ai>",
       to: params.email,
       subject: `Your RevOps Assessment Results - Score: ${params.totalScore}/98`,
       html,
