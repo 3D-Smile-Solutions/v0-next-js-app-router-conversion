@@ -977,7 +977,7 @@ export default function RevOpsChecklist() {
       console.log("[v0] API response data:", result)
 
       if (result.success) {
-        generateAIAnalysis(formData, scores)
+        setAiAnalysis(result.analysis)
         setShowLeadForm(false)
         setIsSubmitted(true)
         window.scrollTo(0, 0)
