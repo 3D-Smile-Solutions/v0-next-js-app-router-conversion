@@ -62,7 +62,7 @@ Return ONLY valid JSON with this exact structure, no markdown or code blocks:
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -83,9 +83,9 @@ Return ONLY valid JSON with this exact structure, no markdown or code blocks:
 
       // Log errors but use fallback for all API failures
       if (response.status === 429) {
-        console.warn("[v0] Gemini API rate limited (429), using fallback analysis")
+        console.log("[v0] Gemini API rate limited (429), using fallback analysis")
       } else {
-        console.warn("[v0] Gemini API error:", errorMessage)
+        console.log("[v0] Gemini API error:", errorMessage)
       }
 
       return generateFallbackAnalysis(data)
@@ -95,7 +95,7 @@ Return ONLY valid JSON with this exact structure, no markdown or code blocks:
     const text = result.candidates?.[0]?.content?.parts?.[0]?.text
 
     if (!text) {
-      console.warn("[v0] No response text from Gemini, using fallback")
+      console.log("[v0] No response text from Gemini, using fallback")
       return generateFallbackAnalysis(data)
     }
 
@@ -103,7 +103,7 @@ Return ONLY valid JSON with this exact structure, no markdown or code blocks:
     console.log("[v0] Generated personalized AI analysis for score:", data.scores.total)
     return parsed
   } catch (error: any) {
-    console.warn("[v0] AI analysis error, using fallback:", error.message)
+    console.log("[v0] AI analysis error, using fallback:", error.message)
     return generateFallbackAnalysis(data)
   }
 }

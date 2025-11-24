@@ -41,7 +41,7 @@ const BRAND = {
 
 // --- CONFIGURATION ---
 const WEBHOOK_URL = ""
-const GOOGLE_API_KEY = "" // Add your key here for real AI
+// The server API route handles all AI analysis securely
 
 // --- MOCK DATA FOR PREVIEW ---
 const MOCK_AI_RESPONSE = {
@@ -905,54 +905,9 @@ export default function RevOpsChecklist() {
     }
   }
 
-  const generateAIAnalysis = async (data, scores) => {
-    setIsAiLoading(true)
-
-    if (!GOOGLE_API_KEY) {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      setAiAnalysis(MOCK_AI_RESPONSE)
-      setIsAiLoading(false)
-      return
-    }
-
-    const prompt = `
-      You are a RevOps Expert. Analyze these results for ${data.company} (Size: ${data.size}, Type: ${data.category}).
-      Overall Score: ${scores.total}/98.
-      Section Scores: ${JSON.stringify(scores)}.
-      
-      Return valid JSON ONLY. Structure:
-      {
-        "summary": "2-3 sentences executive summary.",
-        "risks": [{"title": "Risk 1", "desc": "Details"}, {"title": "Risk 2", "desc": "Details"}],
-        "wins": [{"title": "Win 1", "desc": "Details"}, {"title": "Win 2", "desc": "Details"}],
-        "benchmark": [{"subject": "Foundations", "A": 80, "fullMark": 100}, ...] // Example benchmark if available
-      }
-    `
-
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GOOGLE_API_KEY}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { responseMimeType: "application/json" },
-          }),
-        },
-      )
-
-      const result = await response.json()
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text
-      const json = JSON.parse(text)
-      setAiAnalysis(json)
-    } catch (e) {
-      console.error("AI Error:", e)
-      setAiAnalysis(MOCK_AI_RESPONSE)
-    } finally {
-      setIsAiLoading(false)
-    }
-  }
+  // AI analysis is now handled entirely by the server API route
+  // The server securely processes the Gemini API call and returns the analysis in the response
+  // Removed generateAIAnalysis function
 
   const handleLeadSubmit = async (formData) => {
     setIsSubmittingLead(true)
