@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Revenue Operations Maturity Assessment",
   description: "Evaluate your RevOps capabilities and get AI-powered insights",
   // ... existing icons ...
-    generator: 'v0.app'
+  generator: "v0.app",
 }
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">{children}</body>
+      <body className="antialiased">{children}</body>
     </html>
   )
 }
