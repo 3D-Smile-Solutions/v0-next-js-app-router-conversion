@@ -76,6 +76,9 @@
 }
 
 @theme inline {
+  /* Use the font variables from layout.tsx */
+  --font-sans: var(--font-geist), -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -118,8 +121,22 @@
   * {
     @apply border-border outline-ring/50;
   }
+  
   body {
     @apply bg-background text-foreground;
+    /* Use Geist as default font */
+    font-family: var(--font-geist), -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  
+  /* Headings use Geist (primary typeface) */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-geist), sans-serif;
+    font-weight: 600;
+  }
+  
+  /* Body text uses Inter (secondary typeface) */
+  p, span, label, input, textarea, select, button {
+    font-family: var(--font-inter), sans-serif;
   }
 }
 
