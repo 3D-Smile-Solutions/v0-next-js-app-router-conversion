@@ -36,8 +36,7 @@ const BRAND = {
   sage: "#B5CDB2", // Sage Green
   beige: "#DFD7D0", // Beige
   gray: "#DCDEDF", // Light Gray
-  logoPlaceholder: "Logo.png",
-  Darklogo: "LogoD.png",
+  logoPlaceholder: "Profile Picture - 2 (1).png",
 }
 
 // --- CONFIGURATION ---
@@ -502,23 +501,23 @@ const LeadForm = ({ onSubmit, isSubmitting }) => {
       <div className="p-8 text-center" style={{ backgroundColor: BRAND.secondary }}>
         <div className="mb-6 flex flex-col items-center justify-center">
           <img
-            src={BRAND.Darklogo || "/placeholder.svg"}
+            src={BRAND.logoPlaceholder || "/placeholder.svg"}
             alt="3D Smile Solutions"
-            className="h-18 w-auto object-contain mb-2"
+            className="h-24 w-auto object-contain mb-2"
             onError={(e) => {
               e.target.style.display = "none"
               e.target.nextSibling.style.display = "flex"
             }}
           />
           <div style={{ display: "none" }} className="flex-col items-center">
-            <div className="w-16 h-16 mb-2 bg">
+            <div className="w-16 h-16 mb-2">
               <BrandLogo />
             </div>
             <span className="text-white font-bold text-xl tracking-wide">3D Smile Solutions</span>
           </div>
         </div>
-        <p className="text-[#029482] font-bold text-sm tracking-wide uppercase mb-4">WORK SMARTER. GROW FASTER.</p>
         <h2 className="text-2xl font-bold text-white mb-1">Assessment Complete!</h2>
+        <p className="text-[#029482] font-bold text-sm tracking-wide uppercase mb-4">Grow Faster. Work Smarter.</p>
         <p className="text-slate-300 text-sm">Enter details to unlock your full RevOps Maturity Report.</p>
       </div>
 
@@ -861,6 +860,7 @@ export default function RevOpsChecklist() {
 
   const [aiAnalysis, setAiAnalysis] = useState(null)
   const [isAiLoading, setIsAiLoading] = useState(false)
+  const [showResults, setShowResults] = useState(false) // For toggling between checklist and results
 
   const scrollRef = useRef(null)
 
@@ -936,6 +936,7 @@ export default function RevOpsChecklist() {
         setAiAnalysis(result.analysis)
         setShowLeadForm(false)
         setIsSubmitted(true)
+        setShowResults(true) // Set showResults to true to display the final report
         window.scrollTo(0, 0)
       } else {
         alert("Error submitting form. Please try again.")
@@ -952,7 +953,60 @@ export default function RevOpsChecklist() {
     window.print()
   }
 
-  if (isSubmitted) {
+  // Updated Header Content - Dynamically generated and used in both desktop and mobile headers
+  const headerContent = (
+    <div className="max-w-6xl mx-auto px-4 h-auto md:h-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0 py-3 md:py-0">
+      <div className="flex items-start md:items-center gap-3 w-full md:w-auto">
+        <div className="flex items-center justify-center flex-shrink-0">
+          <img
+            src={BRAND.logoPlaceholder || "/placeholder.svg"}
+            alt="3D Smile Solutions"
+            className="h-10 md:h-12 w-auto object-contain"
+            onError={(e) => {
+              e.target.style.display = "none"
+              e.target.nextSibling.style.display = "block"
+            }}
+          />
+          <div style={{ display: "none" }}>
+            <BrandLogo />
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <span
+            className="font-bold text-base md:text-lg leading-none"
+            style={{ color: BRAND.secondary, fontFamily: "'Geist', sans-serif" }}
+          >
+            3D Smile Solutions
+          </span>
+          <span
+            className="text-xs font-medium tracking-wide"
+            style={{ color: BRAND.primary, fontFamily: "'Inter', sans-serif" }}
+          >
+            WORK SMARTER. GROW FASTER.
+          </span>
+        </div>
+      </div>
+      <div className="flex items-center gap-4 w-full md:w-auto">
+        <div className="hidden sm:flex flex-col items-end">
+          <span className="text-xs text-slate-500 uppercase font-bold" style={{ fontFamily: "'Inter', sans-serif" }}>
+            Progress
+          </span>
+          <span className="text-sm font-bold" style={{ color: BRAND.primary, fontFamily: "'Geist', sans-serif" }}>
+            {Object.keys(responses).length} / 49
+          </span>
+        </div>
+        <div className="w-32 h-2 bg-slate-100 rounded-full overflow-hidden">
+          <div
+            className="h-full transition-all duration-500"
+            style={{ width: `${(Object.keys(responses).length / 49) * 100}%`, backgroundColor: BRAND.primary }}
+          ></div>
+        </div>
+      </div>
+    </div>
+  )
+
+  if (isSubmitted || showResults) {
+    // Show results if submitted OR if showResults is true
     const assessment = getOverallAssessment(scores.total)
 
     return (
@@ -1075,16 +1129,16 @@ export default function RevOpsChecklist() {
   }
 
   return (
-    <div className="min-h-screen font-sans text-slate-800" style={{ backgroundColor: "#F8FAFA" }}>
-      {/* Header */}
-      <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
-          <div className="flex items-start gap-3 flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Mobile Logo + Slogan - shown on mobile and tablet */}
+      {!showResults && !showLeadForm && (
+        <div className="md:hidden sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm px-4 py-3">
+          <div className="flex items-center gap-3 mb-2">
             <div className="flex items-center justify-center">
               <img
                 src={BRAND.logoPlaceholder || "/placeholder.svg"}
                 alt="3D Smile Solutions"
-                className="h-10 md:h-12 w-auto object-contain"
+                className="h-10 w-auto object-contain"
                 onError={(e) => {
                   e.target.style.display = "none"
                   e.target.nextSibling.style.display = "block"
@@ -1094,183 +1148,191 @@ export default function RevOpsChecklist() {
                 <BrandLogo />
               </div>
             </div>
-            <div className="hidden md:flex flex-col ">
-              <span className="font-bold text-lg leading-none" style={{ color: BRAND.secondary }}>
+            <div className="flex flex-col">
+              <span
+                className="font-bold text-base leading-none"
+                style={{ color: BRAND.secondary, fontFamily: "'Geist', sans-serif" }}
+              >
+                3D Smile Solutions
               </span>
-              <span className="text-xs font-medium tracking-wide" style={{ color: BRAND.primary }}>
+              <span
+                className="text-xs font-medium tracking-wide"
+                style={{ color: BRAND.primary, fontFamily: "'Inter', sans-serif" }}
+              >
                 WORK SMARTER. GROW FASTER.
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex flex-col items-end">
-              <span className="text-xs text-slate-500 uppercase font-bold">Progress</span>
-              <span className="text-sm font-bold" style={{ color: BRAND.primary }}>
-                {Object.keys(responses).length} / 49
-              </span>
-            </div>
-            <div className="w-32 h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div
-                className="h-full transition-all duration-500"
-                style={{ width: `${(Object.keys(responses).length / 49) * 100}%`, backgroundColor: BRAND.primary }}
-              ></div>
-            </div>
-          </div>
         </div>
-      </div>
+      )}
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="mb-8 text-center md:text-left">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-[#0A252F] mb-2">Revenue Operations Checklist</h1>
-          <p className="text-lg text-slate-600">Sales and marketing alignment, tailored to dental and healthtech.</p>
-        </div>
-
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Navigation */}
-          <div className="lg:w-1/4">
-            <div className="lg:sticky lg:top-24 space-y-2 overflow-y-auto max-h-[80vh] pb-4 lg:pb-0">
-              <h2 className="text-xs font-bold text-slate-400 uppercase mb-3 px-2">Sections</h2>
-              {SECTIONS.map((section) => {
-                const isActive = activeSection === section.id
-                const answered = section.questions.filter((q) => responses[q.id] !== undefined).length
-                const isDone = answered === section.questions.length
-
-                return (
-                  <button
-                    key={section.id}
-                    onClick={() => {
-                      setActiveSection(section.id)
-                      setTimeout(() => {
-                        scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-                      }, 10)
-                    }}
-                    className={`w-[calc(100%-10px)] ml-1 text-left px-4 py-3 rounded-lg flex items-center justify-between transition-all ${isActive ? "bg-white shadow-md ring-1 ring-[#029482]" : "hover:bg-slate-100 text-slate-600"}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={isActive ? "text-[#029482]" : "text-slate-400"}>{section.icon}</div>
-                      <span className={`text-sm font-bold ${isActive ? "text-[#0A252F]" : ""}`}>
-                        {section.title.split(".")[0]}
-                      </span>
-                    </div>
-                    {isDone && <CheckCircle size={16} className="text-[#029482]" />}
-                  </button>
-                )
-              })}
-            </div>
+      {/* Main Content */}
+      {!showResults && !showLeadForm && (
+        <div>
+          {/* Header */}
+          <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm hidden md:block">
+            {headerContent}
           </div>
+          <main className="max-w-6xl mx-auto px-4 py-8">
+            <div className="mb-8 text-center md:text-left">
+              <h1 className="text-3xl md:text-4xl font-extrabold text-[#0A252F] mb-2">Revenue Operations Checklist</h1>
+              <p className="text-lg text-slate-600">
+                Sales and marketing alignment, tailored to dental and healthtech.
+              </p>
+            </div>
 
-          {/* Main Question Area */}
-          <div className="lg:w-3/4" ref={scrollRef}>
-            {SECTIONS.map((section) => {
-              const answeredCount = section.questions.filter((q) => responses[q.id] !== undefined).length
-              const isSectionComplete = answeredCount === section.questions.length
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Sidebar Navigation */}
+              <div className="lg:w-1/4">
+                <div className="lg:sticky lg:top-24 space-y-2 overflow-y-auto max-h-[80vh] pb-4 lg:pb-0">
+                  <h2 className="text-xs font-bold text-slate-400 uppercase mb-3 px-2">Sections</h2>
+                  {SECTIONS.map((section) => {
+                    const isActive = activeSection === section.id
+                    const answered = section.questions.filter((q) => responses[q.id] !== undefined).length
+                    const isDone = answered === section.questions.length
 
-              return (
-                <div key={section.id} className={activeSection === section.id ? "block" : "hidden"}>
-                  <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6 shadow-sm">
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-lg text-white shrink-0" style={{ backgroundColor: BRAND.primary }}>
-                        {section.icon}
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-[#0A252F] mb-2">{section.title}</h2>
-                        <p className="text-slate-600">{section.focus}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    {section.questions.map((q, idx) => (
-                      <div
-                        key={q.id}
-                        className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
+                    return (
+                      <button
+                        key={section.id}
+                        onClick={() => {
+                          setActiveSection(section.id)
+                          setTimeout(() => {
+                            scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+                          }, 10)
+                        }}
+                        className={`w-full text-left px-4 py-3 rounded-lg flex items-center justify-between transition-all ${isActive ? "bg-white shadow-md ring-1 ring-[#029482]" : "hover:bg-slate-100 text-slate-600"}`}
                       >
-                        <div className="mb-4">
-                          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                            Question {idx + 1}
+                        <div className="flex items-center gap-3">
+                          <div className={isActive ? "text-[#029482]" : "text-slate-400"}>{section.icon}</div>
+                          <span className={`text-sm font-bold ${isActive ? "text-[#0A252F]" : ""}`}>
+                            {section.title.split(".")[0]}
                           </span>
-                          <h3 className="text-lg font-bold text-[#0A252F] mt-1">{q.title}</h3>
-                          <p className="text-slate-600 mt-2 leading-relaxed">{q.text}</p>
                         </div>
+                        {isDone && <CheckCircle size={16} className="text-[#029482]" />}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          {SCORING_GUIDE.map((opt) => {
-                            const isSelected = responses[q.id] === opt.val
-                            return (
-                              <label
-                                key={opt.val}
-                                className={`cursor-pointer p-3 rounded-lg border flex items-center gap-3 transition-all ${isSelected ? "bg-[#029482]/5 border-[#029482] ring-1 ring-[#029482]" : "hover:bg-slate-50 border-slate-200"}`}
-                              >
-                                <div
-                                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${isSelected ? "border-[#029482]" : "border-slate-300"}`}
-                                >
-                                  {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#029482]" />}
-                                </div>
-                                <div>
-                                  <div
-                                    className={`font-bold text-sm ${isSelected ? "text-[#0A252F]" : "text-slate-700"}`}
-                                  >
-                                    {opt.val} Points
-                                  </div>
-                                  <div className="text-xs text-slate-500">{opt.label}</div>
-                                </div>
-                                <input
-                                  type="radio"
-                                  name={q.id}
-                                  className="hidden"
-                                  onChange={() => setResponses({ ...responses, [q.id]: opt.val })}
-                                />
-                              </label>
-                            )
-                          })}
+              {/* Main Question Area */}
+              <div className="lg:w-3/4" ref={scrollRef}>
+                {SECTIONS.map((section) => {
+                  const answeredCount = section.questions.filter((q) => responses[q.id] !== undefined).length
+                  const isSectionComplete = answeredCount === section.questions.length
+
+                  return (
+                    <div key={section.id} className={activeSection === section.id ? "block" : "hidden"}>
+                      <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6 shadow-sm">
+                        <div className="flex items-start gap-4">
+                          <div
+                            className="p-3 rounded-lg text-white shrink-0"
+                            style={{ backgroundColor: BRAND.primary }}
+                          >
+                            {section.icon}
+                          </div>
+                          <div>
+                            <h2 className="text-2xl font-bold text-[#0A252F] mb-2">{section.title}</h2>
+                            <p className="text-slate-600">{section.focus}</p>
+                          </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
 
-                  <div className="mt-8 flex justify-end">
-                    {section.id !== "governance" ? (
-                      <button
-                        onClick={() => {
-                          const currIdx = SECTIONS.findIndex((s) => s.id === section.id)
-                          const nextId = SECTIONS[currIdx + 1].id
-                          setActiveSection(nextId)
-                          setTimeout(
-                            () => scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
-                            10,
-                          )
-                        }}
-                        disabled={!isSectionComplete}
-                        className={`px-6 py-3 rounded-lg font-bold flex items-center gap-2 transition-all
-                          ${
-                            isSectionComplete
-                              ? "text-white hover:opacity-90 hover:scale-105 shadow-md"
-                              : "bg-slate-200 text-slate-400 cursor-not-allowed"
-                          }`}
-                        style={isSectionComplete ? { backgroundColor: BRAND.secondary } : {}}
-                      >
-                        {isSectionComplete ? "Next Section" : "Complete Section to Continue"} <ChevronRight size={18} />
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          setShowLeadForm(true)
-                          window.scrollTo(0, 0)
-                        }}
-                        disabled={!isComplete}
-                        className={`px-8 py-4 rounded-lg font-bold text-lg flex items-center gap-2 shadow-lg transition-all ${isComplete ? "text-white hover:scale-105" : "bg-slate-200 text-slate-400 cursor-not-allowed"}`}
-                        style={isComplete ? { backgroundColor: BRAND.primary } : {}}
-                      >
-                        Finish Assessment <BarChart3 size={20} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+                      <div className="space-y-4">
+                        {section.questions.map((q, idx) => (
+                          <div
+                            key={q.id}
+                            className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
+                          >
+                            <div className="mb-4">
+                              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                Question {idx + 1}
+                              </span>
+                              <h3 className="text-lg font-bold text-[#0A252F] mt-1">{q.title}</h3>
+                              <p className="text-slate-600 mt-2 leading-relaxed">{q.text}</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                              {SCORING_GUIDE.map((opt) => {
+                                const isSelected = responses[q.id] === opt.val
+                                return (
+                                  <label
+                                    key={opt.val}
+                                    className={`cursor-pointer p-3 rounded-lg border flex items-center gap-3 transition-all ${isSelected ? "bg-[#029482]/5 border-[#029482] ring-1 ring-[#029482]" : "hover:bg-slate-50 border-slate-200"}`}
+                                  >
+                                    <div
+                                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${isSelected ? "border-[#029482]" : "border-slate-300"}`}
+                                    >
+                                      {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#029482]" />}
+                                    </div>
+                                    <div>
+                                      <div
+                                        className={`font-bold text-sm ${isSelected ? "text-[#0A252F]" : "text-slate-700"}`}
+                                      >
+                                        {opt.val} Points
+                                      </div>
+                                      <div className="text-xs text-slate-500">{opt.label}</div>
+                                    </div>
+                                    <input
+                                      type="radio"
+                                      name={q.id}
+                                      className="hidden"
+                                      onChange={() => setResponses({ ...responses, [q.id]: opt.val })}
+                                    />
+                                  </label>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-8 flex justify-end">
+                        {section.id !== "governance" ? (
+                          <button
+                            onClick={() => {
+                              const currIdx = SECTIONS.findIndex((s) => s.id === section.id)
+                              const nextId = SECTIONS[currIdx + 1].id
+                              setActiveSection(nextId)
+                              setTimeout(
+                                () => scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+                                10,
+                              )
+                            }}
+                            disabled={!isSectionComplete}
+                            className={`px-6 py-3 rounded-lg font-bold flex items-center gap-2 transition-all
+                              ${
+                                isSectionComplete
+                                  ? "text-white hover:opacity-90 hover:scale-105 shadow-md"
+                                  : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                              }`}
+                            style={isSectionComplete ? { backgroundColor: BRAND.secondary } : {}}
+                          >
+                            {isSectionComplete ? "Next Section" : "Complete Section to Continue"}{" "}
+                            <ChevronRight size={18} />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              setShowLeadForm(true)
+                              window.scrollTo(0, 0)
+                            }}
+                            disabled={!isComplete}
+                            className={`px-8 py-4 rounded-lg font-bold text-lg flex items-center gap-2 shadow-lg transition-all ${isComplete ? "text-white hover:scale-105" : "bg-slate-200 text-slate-400 cursor-not-allowed"}`}
+                            style={isComplete ? { backgroundColor: BRAND.primary } : {}}
+                          >
+                            Finish Assessment <BarChart3 size={20} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </main>
         </div>
-      </main>
+      )}
     </div>
   )
 }

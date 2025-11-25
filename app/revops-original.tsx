@@ -36,8 +36,7 @@ const BRAND = {
   sage: "#B5CDB2", // Sage Green
   beige: "#DFD7D0", // Beige
   gray: "#DCDEDF", // Light Gray
-  logoPlaceholder: "Logo.png",
-  Darklogo: "LogoD.png",
+  logoPlaceholder: "Profile Picture - 2 (1).png",
 }
 
 // --- CONFIGURATION ---
@@ -503,9 +502,9 @@ const LeadForm = ({ onSubmit, isSubmitting }) => {
       <div className="p-8 text-center" style={{ backgroundColor: BRAND.secondary }}>
         <div className="mb-6 flex flex-col items-center justify-center">
           <img
-            src={BRAND.Darklogo || "/placeholder.svg"}
+            src={BRAND.logoPlaceholder}
             alt="3D Smile Solutions"
-            className="h-18 w-auto object-contain mb-2"
+            className="h-24 w-auto object-contain mb-2"
             onError={(e) => {
               e.target.style.display = "none"
               e.target.nextSibling.style.display = "flex"
@@ -518,8 +517,8 @@ const LeadForm = ({ onSubmit, isSubmitting }) => {
             <span className="text-white font-bold text-xl tracking-wide">3D Smile Solutions</span>
           </div>
         </div>
-        <p className="text-[#029482] font-bold text-sm tracking-wide uppercase mb-4">Work Smarter. Grow Faster.</p>
         <h2 className="text-2xl font-bold text-white mb-1">Assessment Complete!</h2>
+        <p className="text-[#029482] font-bold text-sm tracking-wide uppercase mb-4">Grow Faster. Work Smarter.</p>
         <p className="text-slate-300 text-sm">Enter details to unlock your full RevOps Maturity Report.</p>
       </div>
 
@@ -1155,7 +1154,7 @@ export default function RevOpsChecklist() {
                 3D Smile Solutions
               </span>
               <span className="text-xs font-medium tracking-wide" style={{ color: BRAND.primary }}>
-                Work Smarter. Grow Faster.
+                GROW FASTER. WORK SMARTER.
               </span>
             </div>
           </div>
@@ -1201,7 +1200,7 @@ export default function RevOpsChecklist() {
                         scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
                       }, 10)
                     }}
-                    className={`w-[calc(100%-10px)] ml-1 text-left px-4 py-3 rounded-lg flex items-center justify-between transition-all ${isActive ? "bg-white shadow-md ring-1 ring-[#029482]" : "hover:bg-slate-100 text-slate-600"}`}
+                    className={`w-full text-left px-4 py-3 rounded-lg flex items-center justify-between transition-all ${isActive ? "bg-white shadow-md ring-1 ring-[#029482]" : "hover:bg-slate-100 text-slate-600"}`}
                   >
                     <div className="flex items-center gap-3">
                       <div className={isActive ? "text-[#029482]" : "text-slate-400"}>{section.icon}</div>
