@@ -1,8 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
-
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -79,8 +76,6 @@
 }
 
 @theme inline {
-  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-mono: 'Geist Mono', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -123,30 +118,8 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
   body {
     @apply bg-background text-foreground;
-    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  }
-  
-  /* Headings use Geist (primary typeface) */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Geist', sans-serif;
-    font-weight: 600;
-  }
-  
-  /* Body text uses Inter (secondary typeface) */
-  p, span, label, input, textarea, select {
-    font-family: 'Inter', sans-serif;
-  }
-  
-  /* Utility classes for explicit font control */
-  .font-geist {
-    font-family: 'Geist', sans-serif;
-  }
-  
-  .font-inter {
-    font-family: 'Inter', sans-serif;
   }
 }
 
