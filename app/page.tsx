@@ -1537,26 +1537,6 @@ export default function RevOpsChecklist() {
           </div>
         </div>
 
-        {/* Cal.com Calendar Embed - CHECKLIST PAGE */}
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 md:p-12 mt-12">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-[#0A252F] mb-2">
-              📅 Ready to Get Started?
-            </h3>
-            <p className="text-slate-600">
-              Schedule a free strategy call to review your results and build your action plan
-            </p>
-          </div>
-          <div style={{ borderRadius: "8px", overflow: "hidden" }}>
-            <iframe
-              src="https://cal.com/3dsmilesolutions/3dss-discovery?embed=true"
-              width="100%"
-              height={700}
-              frameBorder="0"
-              style={{ border: "1px solid #e5e7eb", borderRadius: "8px" }}
-            />
-          </div>
-        </div>
       </main>
     </div>
   );
