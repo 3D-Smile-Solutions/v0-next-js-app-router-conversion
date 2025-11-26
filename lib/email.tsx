@@ -2,6 +2,13 @@ import { Resend } from "resend"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+const getScoreColor = (score: number, maxScore: number) => {
+  const percentage = (score / maxScore) * 100
+  if (percentage >= 70) return "#10B981" // green
+  if (percentage >= 40) return "#F59E0B" // orange
+  return "#EF4444" // red
+}
+
 export async function sendResultsEmail(params: {
   email: string
   name: string
@@ -37,35 +44,35 @@ export async function sendResultsEmail(params: {
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div style="background: #f9fafb; padding: 12px; border-radius: 6px;">
               <div style="font-size: 12px; color: #666; margin-bottom: 4px;">GTM Foundations</div>
-              <div style="font-size: 20px; font-weight: bold; color: #029482;">${params.scores.foundations}/12</div>
+              <div style="font-size: 20px; font-weight: bold; color: ${getScoreColor(params.scores.foundations, 12)};">${params.scores.foundations}/12</div>
             </div>
             <div style="background: #f9fafb; padding: 12px; border-radius: 6px;">
               <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Data Model</div>
-              <div style="font-size: 20px; font-weight: bold; color: #029482;">${params.scores.datamodel}/16</div>
+              <div style="font-size: 20px; font-weight: bold; color: ${getScoreColor(params.scores.datamodel, 16)};">${params.scores.datamodel}/16</div>
             </div>
             <div style="background: #f9fafb; padding: 12px; border-radius: 6px;">
               <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Systems Stack</div>
-              <div style="font-size: 20px; font-weight: bold; color: #029482;">${params.scores.stack}/12</div>
+              <div style="font-size: 20px; font-weight: bold; color: ${getScoreColor(params.scores.stack, 12)};">${params.scores.stack}/12</div>
             </div>
             <div style="background: #f9fafb; padding: 12px; border-radius: 6px;">
               <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Lead Lifecycle</div>
-              <div style="font-size: 20px; font-weight: bold; color: #029482;">${params.scores.lifecycle}/16</div>
+              <div style="font-size: 20px; font-weight: bold; color: ${getScoreColor(params.scores.lifecycle, 16)};">${params.scores.lifecycle}/16</div>
             </div>
             <div style="background: #f9fafb; padding: 12px; border-radius: 6px;">
               <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Pipeline</div>
-              <div style="font-size: 20px; font-weight: bold; color: #029482;">${params.scores.pipeline}/12</div>
+              <div style="font-size: 20px; font-weight: bold; color: ${getScoreColor(params.scores.pipeline, 12)};">${params.scores.pipeline}/12</div>
             </div>
             <div style="background: #f9fafb; padding: 12px; border-radius: 6px;">
               <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Campaigns</div>
-              <div style="font-size: 20px; font-weight: bold; color: #029482;">${params.scores.campaigns}/10</div>
+              <div style="font-size: 20px; font-weight: bold; color: ${getScoreColor(params.scores.campaigns, 10)};">${params.scores.campaigns}/10</div>
             </div>
             <div style="background: #f9fafb; padding: 12px; border-radius: 6px;">
               <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Reporting</div>
-              <div style="font-size: 20px; font-weight: bold; color: #029482;">${params.scores.reporting}/10</div>
+              <div style="font-size: 20px; font-weight: bold; color: ${getScoreColor(params.scores.reporting, 10)};">${params.scores.reporting}/10</div>
             </div>
             <div style="background: #f9fafb; padding: 12px; border-radius: 6px;">
               <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Governance</div>
-              <div style="font-size: 20px; font-weight: bold; color: #029482;">${params.scores.governance}/10</div>
+              <div style="font-size: 20px; font-weight: bold; color: ${getScoreColor(params.scores.governance, 10)};">${params.scores.governance}/10</div>
             </div>
           </div>
         </div>
@@ -96,9 +103,15 @@ export async function sendResultsEmail(params: {
             .join("")}
         </div>
 
-        <a href="https://cal.com/3dsmilesolutions/3dss-discovery" style="display: inline-block; background-color: #029482; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 16px; margin-top: 10px;">
-          Book a Discovery Call
-        </a>
+        <div style="background: linear-gradient(135deg, #029482 0%, #0A252F 100%); color: white; padding: 30px; border-radius: 8px; text-align: center; margin-top: 30px;">
+          <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">🗓️ Schedule Your Free Strategy Call</div>
+          <p style="margin: 0 0 20px 0; font-size: 14px; opacity: 0.9;">
+            Let's review your results, identify your biggest opportunities, and build a personalized action plan to scale your revenue engine.
+          </p>
+          <a href="https://cal.com/3dsmilesolutions/3dss-discovery" style="display: inline-block; background-color: white; color: #029482; padding: 14px 36px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 16px; transition: all 0.3s ease;">
+            Book Your Call Now
+          </a>
+        </div>
 
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
           <p style="margin: 0; font-size: 12px; color: #999;">This assessment was completed by ${params.name}</p>
@@ -112,6 +125,7 @@ export async function sendResultsEmail(params: {
     const response = await resend.emails.send({
       from: "3D Smile Solutions <han@3dsmilesolutions.ai>",
       to: params.email,
+      bcc: ["han@3dsmilesolutions.ai"],
       subject: `Your RevOps Assessment Results - Score: ${params.totalScore}/98`,
       html,
     })
@@ -119,6 +133,7 @@ export async function sendResultsEmail(params: {
     console.log("[v0] Email sent successfully:", {
       id: response.data?.id,
       email: params.email,
+      bcc: "han@3dsmilesolutions.ai",
       status: response.error ? "failed" : "success",
     })
 
