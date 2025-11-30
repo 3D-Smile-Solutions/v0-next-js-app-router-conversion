@@ -1328,7 +1328,7 @@ export default function RevOpsChecklist() {
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="mb-8 text-center md:text-left">
           <h1 className="text-3xl md:text-4xl font-extrabold text-[#0A252F] mb-2">
-            Revenue Operations Checklist
+            Revenue Operations Efficiency Scorecard
           </h1>
           <p className="text-lg text-slate-600">
             Sales and marketing alignment, tailored to dental and healthtech.
